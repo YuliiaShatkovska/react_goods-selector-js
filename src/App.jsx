@@ -1,7 +1,7 @@
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
-import cl from 'classnames';
+import cn from 'classnames';
 
 export const goods = [
   'Dumplings',
@@ -20,24 +20,24 @@ export const App = () => {
   const [isSelectedGood, setIsSelectedGood] = useState('Jam');
 
   const handleClear = () => setIsSelectedGood('');
+  const handleSelect = good => {
+    setIsSelectedGood(prev => (prev === good ? '' : good));
+  };
 
   return (
     <main className="section container">
-      {!isSelectedGood ? (
-        <h1 className="title is-flex is-align-items-center">
-          No goods selected
-        </h1>
-      ) : (
-        <h1 className="title is-flex is-align-items-center">
-          {isSelectedGood} is selected
+      <h1 className="title is-flex is-align-items-center">
+        {isSelectedGood ? `${isSelectedGood} is selected` : 'No goods selected'}
+
+        {isSelectedGood && (
           <button
             data-cy="ClearButton"
             type="button"
             className="delete ml-3"
             onClick={handleClear}
           />
-        </h1>
-      )}
+        )}
+      </h1>
 
       <table className="table">
         <tbody>
@@ -48,20 +48,18 @@ export const App = () => {
               <tr
                 data-cy="Good"
                 key={good}
-                className={cl({
+                className={cn({
                   'has-background-success-light': isSelected,
                 })}
               >
                 <td>
                   <button
                     type="button"
-                    className={cl('button', {
+                    className={cn('button', {
                       ' is-info': isSelected,
                     })}
                     data-cy={isSelected ? 'RemoveButton' : 'AddButton'}
-                    onClick={
-                      isSelected ? handleClear : () => setIsSelectedGood(good)
-                    }
+                    onClick={() => handleSelect(good)}
                   >
                     {isSelected ? '-' : '+'}
                   </button>
